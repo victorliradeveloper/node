@@ -1,0 +1,44 @@
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+mvnw
+mvnw.cmd
+.mvn/
+
+# Gradle
+build/
+.gradle/
+gradlew
+gradlew.bat
+
+# Spring Boot
+HELP.md
+*.log
+spring-shell.log
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+*.launch
+bin/
+
+# VS Code Java
+.factorypath
+
+# Node / NestJS
+node_modules/
+dist/
+*.env
+.claude
