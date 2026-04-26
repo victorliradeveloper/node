@@ -1,0 +1,91 @@
+version: '3.8'
+
+name: nest-microservices
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: nest-microservices-postgres
+    environment:
+      POSTGRES_DB: tododb
+      POSTGRES_USER: todo_user
+      POSTGRES_PASSWORD: todo_pass
+    ports:
+      - "5432:5432"
+    networks:
+      - microservices-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U todo_user -d tododb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: nest-microservices-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - microservices-net
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  todo-service:
+    build: ./todo-service
+    container_name: nest-microservices-todo-service
+    environment:
+      DB_HOST: postgres
+      DB_USER: todo_user
+      DB_PASS: todo_pass
+      DB_NAME: tododb
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - microservices-net
+
+  notification-service:
+    build: ./notification-service
+    container_name: nest-microservices-notification-service
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+    ports:
+      - "3002:3002"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - microservices-net
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: nest-microservices-api-gateway
+    environment:
+      TODO_SERVICE_URL: http://todo-service:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - todo-service
+    networks:
+      - microservices-net
+
+networks:
+  microservices-net:
+    driver: bridge
