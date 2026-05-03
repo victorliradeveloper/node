@@ -1,0 +1,165 @@
+{
+  "info": {
+    "name": "Buffers & Streams",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Upload",
+      "item": [
+        {
+          "name": "Upload arquivo de texto",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/octet-stream" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/upload?filename=test.txt",
+              "host": ["{{baseUrl}}"],
+              "path": ["upload"],
+              "query": [{ "key": "filename", "value": "test.txt" }]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "hello world from stream test",
+              "options": { "raw": { "language": "text" } }
+            },
+            "description": "Envia texto puro. Salvo comprimido em ./uploads/test.txt.gz"
+          }
+        },
+        {
+          "name": "Upload imagem",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/octet-stream" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/upload?filename=foto.jpg",
+              "host": ["{{baseUrl}}"],
+              "path": ["upload"],
+              "query": [{ "key": "filename", "value": "foto.jpg" }]
+            },
+            "body": {
+              "mode": "file",
+              "file": { "src": "" }
+            },
+            "description": "Body → binary → selecione uma imagem local.\nSalvo em ./uploads/foto.jpg.gz"
+          }
+        },
+        {
+          "name": "Upload vídeo",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/octet-stream" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/upload?filename=video.mp4",
+              "host": ["{{baseUrl}}"],
+              "path": ["upload"],
+              "query": [{ "key": "filename", "value": "video.mp4" }]
+            },
+            "body": {
+              "mode": "file",
+              "file": { "src": "" }
+            },
+            "description": "Body → binary → selecione um .mp4 local.\nO servidor recebe como stream e salva comprimido em ./uploads/video.mp4.gz chunk por chunk, sem carregar o arquivo inteiro na memória."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Download",
+      "item": [
+        {
+          "name": "Download arquivo de texto",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/download/test.txt",
+              "host": ["{{baseUrl}}"],
+              "path": ["download", "test.txt"]
+            },
+            "description": "Descomprime on-the-fly e retorna o conteúdo original."
+          }
+        },
+        {
+          "name": "Download imagem",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/download/foto.jpg",
+              "host": ["{{baseUrl}}"],
+              "path": ["download", "foto.jpg"]
+            },
+            "description": "Retorna a imagem original descomprimida durante o envio."
+          }
+        },
+        {
+          "name": "Download vídeo",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/download/video.mp4",
+              "host": ["{{baseUrl}}"],
+              "path": ["download", "video.mp4"]
+            },
+            "description": "Retorna o vídeo original descomprimido on-the-fly.\nPode demorar dependendo do tamanho — o Postman aguarda o stream fechar."
+          }
+        }
+      ]
+    },
+    {
+      "name": "CSV",
+      "item": [
+        {
+          "name": "CSV inline → NDJSON",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "text/csv" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/csv",
+              "host": ["{{baseUrl}}"],
+              "path": ["csv"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "name,age,city\nAlice,30,São Paulo\nBob,25,Rio de Janeiro\nCarol,35,Belo Horizonte",
+              "options": { "raw": { "language": "text" } }
+            },
+            "description": "Envia CSV como texto. Responde com um objeto JSON por linha (NDJSON)."
+          }
+        },
+        {
+          "name": "CSV arquivo → NDJSON",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "text/csv" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/csv",
+              "host": ["{{baseUrl}}"],
+              "path": ["csv"]
+            },
+            "body": {
+              "mode": "file",
+              "file": { "src": "" }
+            },
+            "description": "Body → binary → selecione um .csv local.\nIdeal para testar com arquivos grandes e observar o comportamento de backpressure."
+          }
+        }
+      ]
+    }
+  ]
+}
