@@ -9,7 +9,7 @@ import {
 export class CreateBookDto {
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title!: string;
 
   @IsString()
   @IsOptional()
