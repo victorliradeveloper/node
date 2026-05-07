@@ -8,16 +8,16 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { AuthorService } from './author.service';
-import { CreateAuthorDto } from './dto/create-author.dto';
-import { UpdateAuthorDto } from './dto/update-author.dto';
+import { PublisherService } from '../service/publisher.service';
+import { CreatePublisherDto } from '../dto/create-publisher.dto';
+import { UpdatePublisherDto } from '../dto/update-publisher.dto';
 
-@Controller('authors')
-export class AuthorController {
-  constructor(private readonly service: AuthorService) {}
+@Controller('publishers')
+export class PublisherController {
+  constructor(private readonly service: PublisherService) {}
 
   @Post()
-  create(@Body() dto: CreateAuthorDto) {
+  create(@Body() dto: CreatePublisherDto) {
     return this.service.create(dto);
   }
 
@@ -32,7 +32,7 @@ export class AuthorController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateAuthorDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdatePublisherDto) {
     return this.service.update(id, dto);
   }
 

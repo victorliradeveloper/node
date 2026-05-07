@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Review } from './review.entity';
-import { Book } from '../book/book.entity';
-import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
+import { Review } from '../entity/review.entity';
+import { Book } from '../entity/book.entity';
+import { CreateReviewDto } from '../dto/create-review.dto';
+import { UpdateReviewDto } from '../dto/update-review.dto';
 
 @Injectable()
 export class ReviewService {
@@ -19,11 +19,7 @@ export class ReviewService {
     const book = await this.bookRepo.findOneBy({ id: dto.bookId });
     if (!book) throw new NotFoundException(`Book #${dto.bookId} not found`);
 
-    const review = this.reviewRepo.create({
-      content: dto.content,
-      rating: dto.rating,
-      book,
-    });
+    const review = this.reviewRepo.create({ content: dto.content, rating: dto.rating, book });
     return this.reviewRepo.save(review);
   }
 
@@ -32,10 +28,7 @@ export class ReviewService {
   }
 
   async findOne(id: number) {
-    const review = await this.reviewRepo.findOne({
-      where: { id },
-      relations: ['book'],
-    });
+    const review = await this.reviewRepo.findOne({ where: { id }, relations: ['book'] });
     if (!review) throw new NotFoundException(`Review #${id} not found`);
     return review;
   }

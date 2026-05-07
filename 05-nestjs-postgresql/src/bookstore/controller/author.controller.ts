@@ -8,16 +8,16 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ReviewService } from './review.service';
-import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
+import { AuthorService } from '../service/author.service';
+import { CreateAuthorDto } from '../dto/create-author.dto';
+import { UpdateAuthorDto } from '../dto/update-author.dto';
 
-@Controller('reviews')
-export class ReviewController {
-  constructor(private readonly service: ReviewService) {}
+@Controller('authors')
+export class AuthorController {
+  constructor(private readonly service: AuthorService) {}
 
   @Post()
-  create(@Body() dto: CreateReviewDto) {
+  create(@Body() dto: CreateAuthorDto) {
     return this.service.create(dto);
   }
 
@@ -32,7 +32,7 @@ export class ReviewController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateReviewDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateAuthorDto) {
     return this.service.update(id, dto);
   }
 

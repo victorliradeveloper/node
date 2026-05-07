@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { Book } from './book.entity';
-import { Publisher } from '../publisher/publisher.entity';
-import { Author } from '../author/author.entity';
-import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
+import { Book } from '../entity/book.entity';
+import { Publisher } from '../entity/publisher.entity';
+import { Author } from '../entity/author.entity';
+import { CreateBookDto } from '../dto/create-book.dto';
+import { UpdateBookDto } from '../dto/update-book.dto';
 
 @Injectable()
 export class BookService {
@@ -19,11 +19,7 @@ export class BookService {
   ) {}
 
   async create(dto: CreateBookDto) {
-    const book = this.bookRepo.create({
-      title: dto.title,
-      isbn: dto.isbn,
-      year: dto.year,
-    });
+    const book = this.bookRepo.create({ title: dto.title, isbn: dto.isbn, year: dto.year });
 
     if (dto.publisherId) {
       const publisher = await this.publisherRepo.findOneBy({ id: dto.publisherId });

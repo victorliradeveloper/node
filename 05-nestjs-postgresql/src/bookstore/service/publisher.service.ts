@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Publisher } from './publisher.entity';
-import { CreatePublisherDto } from './dto/create-publisher.dto';
-import { UpdatePublisherDto } from './dto/update-publisher.dto';
+import { Publisher } from '../entity/publisher.entity';
+import { CreatePublisherDto } from '../dto/create-publisher.dto';
+import { UpdatePublisherDto } from '../dto/update-publisher.dto';
 
 @Injectable()
 export class PublisherService {
@@ -21,10 +21,7 @@ export class PublisherService {
   }
 
   async findOne(id: number) {
-    const publisher = await this.repo.findOne({
-      where: { id },
-      relations: ['books'],
-    });
+    const publisher = await this.repo.findOne({ where: { id }, relations: ['books'] });
     if (!publisher) throw new NotFoundException(`Publisher #${id} not found`);
     return publisher;
   }

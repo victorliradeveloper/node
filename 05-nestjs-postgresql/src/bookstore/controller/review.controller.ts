@@ -8,16 +8,16 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { BookService } from './book.service';
-import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
+import { ReviewService } from '../service/review.service';
+import { CreateReviewDto } from '../dto/create-review.dto';
+import { UpdateReviewDto } from '../dto/update-review.dto';
 
-@Controller('books')
-export class BookController {
-  constructor(private readonly service: BookService) {}
+@Controller('reviews')
+export class ReviewController {
+  constructor(private readonly service: ReviewService) {}
 
   @Post()
-  create(@Body() dto: CreateBookDto) {
+  create(@Body() dto: CreateReviewDto) {
     return this.service.create(dto);
   }
 
@@ -32,7 +32,7 @@ export class BookController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateBookDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateReviewDto) {
     return this.service.update(id, dto);
   }
 
